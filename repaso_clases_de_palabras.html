@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Repasa las clases de palabras</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+    .word {
+      cursor: pointer;
+      padding: 4px 8px;
+      margin: 3px;
+      border-radius: 5px;
+      display: inline-block;
+      border: 1px solid transparent;
+    }
+    .word:hover {
+      background-color: #e0e0e0;
+    }
+    .selected {
+      border-color: blue;
+      background-color: #cce5ff;
+    }
+    .button {
+      margin-top: 10px;
+    }
+    select {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔤 Repasa las clases de palabras</h1>
+  <p>Haz clic en cada palabra y selecciona su tipo:</p>
+
+  <div id="sentence"></div>
+
+  <div class="button">
+    <button onclick="checkAnswers()">Corregir</button>
+    <button onclick="newSentence()">Nueva frase</button>
+  </div>
+
+  <script>
+    const sentences = [
+      { text: "El perro negro corre rápidamente por el parque", types: ["determinante", "sustantivo", "adjetivo", "verbo", "adverbio", "preposición", "determinante", "sustantivo"] },
+      { text: "Mi hermana y yo fuimos al cine ayer", types: ["determinante", "sustantivo", "conjunción", "pronombre", "verbo", "preposición", "sustantivo", "adverbio"] },
+      { text: "Aquel coche rojo es muy rápido", types: ["determinante", "sustantivo", "adjetivo", "verbo", "adverbio", "adjetivo"] },
+      { text: "Tú y yo iremos a la playa mañana", types: ["pronombre", "conjunción", "pronombre", "verbo", "preposición", "determinante", "sustantivo", "adverbio"] }
+    ];
+
+    let currentSentence = [];
+
+    function newSentence() {
+      const container = document.getElementById("sentence");
+      container.innerHTML = "";
+      const index = Math.floor(Math.random() * sentences.length);
+      const sentence = sentences[index];
+      currentSentence = sentence;
+
+      sentence.text.split(" ").forEach((word, i) => {
+        const span = document.createElement("span");
+        span.className = "word";
+        span.textContent = word;
+
+        const select = document.createElement("select");
+        select.innerHTML = `
+          <option value="">--tipo--</option>
+          <option value="sustantivo">Sustantivo</option>
+          <option value="verbo">Verbo</option>
+          <option value="adjetivo">Adjetivo</option>
+          <option value="adverbio">Adverbio</option>
+          <option value="determinante">Determinante</option>
+          <option value="pronombre">Pronombre</option>
+          <option value="preposición">Preposición</option>
+          <option value="conjunción">Conjunción</option>
+          <option value="interjección">Interjección</option>
+        `;
+        span.appendChild(select);
+        container.appendChild(span);
+      });
+    }
+
+    function checkAnswers() {
+      const words = document.querySelectorAll("#sentence .word");
+      words.forEach((span, i) => {
+        const select = span.querySelector("select");
+        const selected = select.value;
+        const correct = currentSentence.types[i];
+        if (selected === correct) {
+          span.style.borderColor = "green";
+          span.style.backgroundColor = "#d4edda";
+        } else {
+          span.style.borderColor = "red";
+          span.style.backgroundColor = "#f8d7da";
+        }
+      });
+    }
+
+    window.onload = newSentence;
+  </script>
+</body>
+</html>
